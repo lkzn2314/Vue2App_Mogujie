@@ -18,11 +18,11 @@
  	let o = {
  		'M+': date.getMonth() + 1, //月
  		'd+': date.getDate(), //日   getDay()返回的是一周中的星期几
- 		'h': date.getHours(),
- 		'm': date.getMinutes(),
- 		's': date.getSeconds()
+ 		'h+': date.getHours(),
+ 		'm+': date.getMinutes(),
+ 		's+': date.getSeconds()
  	};
- 	for (let k in 0) {
+ 	for (let k in o) {
  		if (new RegExp(`(${k})`).test(fmt)) {
  			let str = o[k] + '';
  			fmt = fmt.replace(RegExp.$1, (RegExp.$1.length === 1) ? str : padLeftZero(str));
