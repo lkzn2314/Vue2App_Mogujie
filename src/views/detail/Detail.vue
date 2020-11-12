@@ -158,7 +158,9 @@
 				product.price = this.goodsInfo.realPrice
 				product.iid = this.iid
 				
-				this.$store.dispatch('addCart', product)
+				this.$store.dispatch('addCart', product).then(res => {
+					this.$toast.show(res, 2000)
+				})
 			}
 		}
 	}
