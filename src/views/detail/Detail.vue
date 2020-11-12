@@ -82,7 +82,7 @@
 				
 				this.goodsInfo = new GoodsInfo(data.itemInfo, data.columns, data.shopInfo.services)
 				this.shopInfo = new ShopInfo(data.shopInfo)
-				console.log(this.goodsInfo)
+
 				this.showImg = data.detailInfo
 
 				this.paramsInfo = new ParamsInfo(data.itemParams.info, data.itemParams.rule)
