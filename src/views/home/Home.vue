@@ -170,6 +170,7 @@
   .nav-bar {
     background-color: var(--color-tint);
     color: var(--color-background);
+		font-weight: 600;
   }
   .content {
     position: absolute;

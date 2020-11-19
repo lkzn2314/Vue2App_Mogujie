@@ -1,11 +1,13 @@
 <template>
   <div class="goods-list-item" @click="itemClick">
     <img v-lazy="showImg" alt="" @load="imgLoad">
-    <p>{{goodsitem.title}}</p>
-    <div>
-      <span>{{goodsitem.price}}</span>
-      <span>{{goodsitem.cfav}}</span>
-    </div>
+    <div class="item-text">
+			<p>{{goodsitem.title}}</p>
+			<div>
+			  <span>{{goodsitem.price}}</span>
+			  <span>{{goodsitem.cfav}}</span>
+			</div>
+		</div>
   </div>
 </template>
 
@@ -22,7 +24,7 @@
     },
 		computed: {
 			showImg() {
-				return this.goodsitem.image || this.goodsitem.show.img
+				return this.goodsitem.img || this.goodsitem.image || this.goodsitem.show.img
 			}
 		},
     methods: {
@@ -40,15 +42,22 @@
 
 <style scoped>
   .goods-list-item {
-    float: left;
+		position: relative;
     width: 50%;
+		padding-bottom: 40px;
     font-size: 12px;
   }
   .goods-list-item img {
     width: 95%;
-    height: 227px;
     border-radius: 6px;
   }
+	.item-text {
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		padding: 0 6px;
+	}
   .goods-list-item p {
     margin: 5px 0 2px;
     white-space: nowrap;
