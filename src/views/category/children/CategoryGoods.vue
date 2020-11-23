@@ -1,5 +1,5 @@
 <template>
-	<div class="category-goods">
+	<div class="category-goods" v-if="goods">
 		<!-- <grid-view :cols="3" :lineSpace="15" :v-margin="20"> -->
 		<div class="menu-list-item" v-for="(item, index) in goods" :key="index">
 			<a href="#">
@@ -47,6 +47,7 @@
 	} */
 	.category-goods {
 		display: flex;
+		justify-content: space-between;
 		flex-wrap: wrap;
 		/* width: 70%; */
 		padding: 20px 8px;
@@ -56,7 +57,7 @@
 
 	.menu-list-item {
 		flex: 1;
-		margin: 0 8px 15px 0;
+		margin-bottom: 15px;
 	}
 
 	.menu-list-item img {

@@ -1,19 +1,17 @@
 <template>
 	<div id="category">
 		<category-nav-bar />
-		
+
 		<div class="category-content">
-			<category-menu-list :category="categoryInfo"
-			@itemClick="itemClick" />
-			
+			<category-menu-list :category="categoryLeft" @itemClick="itemClick"/>
+
 			<scroll class="goods-content" ref="scroll">
-				<category-goods :goods="categoryGoods"/>
-				<tab-control :titles="['综合', '新品', '销量']"
-				@tabClick="tabClick"/>
-				<goods-list :goods="detailGoods[currentType].list"/>
-			
+				<category-goods :goods="showSubcategory"/>
+				<tab-control :titles="['综合', '新品', '销量']" @tabClick="tabClick"/>
+				<goods-list :goods="showSubDetail"/>
+
 			</scroll>
-			
+
 		</div>
 	</div>
 </template>
@@ -22,9 +20,9 @@
 	import CategoryNavBar from './children/CategoryNavBar'
 	import CategoryMenuList from './children/CategoryMenuList'
 	import CategoryGoods from './children/CategoryGoods'
-	
+
 	import GoodsList from 'components/content/goods/GoodsList'
-	
+
 	import TabControl from 'components/content/tabcontrol/TabControl'
 	import Scroll from 'components/common/scroll/Scroll'
 
@@ -46,79 +44,90 @@
 		},
 		data() {
 			return {
-				maitKey: null,
-				categoryInfo: [],
-				categoryGoods: [],
-				
-				miniWallkey: null,
-				currentType: 'pop',
-				detailGoods: {
-					'pop': {list: []},
-					'new': {list: []},
-					'sell': {list: []}
-				}
+				categoryLeft: [],
+				categoryRight: [],
+				currentIndex: -1,
+				currentType: 'pop'
+			}
+		},
+		computed: {
+			showSubcategory() {
+				//不写if，报错 'subcategories' of undefined 
+				if (this.currentIndex === -1) return []
+				return this.categoryRight[this.currentIndex].subcategories
+			},
+			showSubDetail() {
+				if (this.currentIndex === -1) return []
+				return this.categoryRight[this.currentIndex].categoryDetail[this.currentType]
 			}
 		},
 		created() {
 			this.getCategory()
-
-			this.getSubcategory('3627')
-			
-			this.getCategoryDetail(10062603, 'pop')
-			this.getCategoryDetail(10062603, 'new')
-			this.getCategoryDetail(10062603, 'sell')
 		},
+
 		methods: {
-			//左侧导航
 			getCategory() {
 				getCategory().then(res => {
 					// console.log(res)
-					this.categoryInfo = res.data.category.list
-					// console.log(this.categoryInfo)
-				})
-			},
-			
-			//上侧子导航
-			getSubcategory(maitKey) {
-				getSubcategory(maitKey).then(res => {
-					this.categoryGoods = res.data.list
-					// console.log(this.categoryGoods)
-				})
-			},
-			
-			//分类详细
-			getCategoryDetail(miniWallkey, type) {
-				getCategoryDetail(miniWallkey, type).then(res => {
-					this.detailGoods[type].list = res
-				})
-			},
-
-			itemClick(index) {
-				this.maitKey = this.categoryInfo[index].maitKey
-				this.getSubcategory(this.maitKey)
+					this.categoryLeft = res.data.category.list
+					// console.log(this.categoryLeft)
 				
-				this.miniWallkey = this.categoryInfo[index].miniWallkey
-				// console.log(this.miniWallkey)
-				this.getCategoryDetail(this.miniWallkey, this.currentType)
-			
-				//点击右侧自动滚回原处
-				this.$refs.scroll.scrollTo(0, 0, 200)
+					// 初始化每个类别的子数据
+					for (let i = 0; i < this.categoryLeft.length; i++) {
+					  this.categoryRight[i] = {
+					    subcategories: [],
+					    categoryDetail: {
+					      'pop': [], 
+					      'new': [],
+					      'sell': []
+					    }
+					  }
+					}
+					// 请求第一个子分类的数据
+					this.getSubcategory(0)
+				})
 			},
+			getSubcategory(index) {
+				const maitKey = this.categoryLeft[index].maitKey;
+				this.currentIndex = index;
+				getSubcategory(maitKey).then(res => {
+					// console.log(res)
+					this.categoryRight[index].subcategories = res.data.list
+					this.categoryRight = {...this.categoryRight}
+					this.getCategoryDetail('pop')
+					this.getCategoryDetail('new')
+					this.getCategoryDetail('sell')
+				})
+			},
+			getCategoryDetail(type) {
+				const miniWallkey = this.categoryLeft[this.currentIndex].miniWallkey
+				getCategoryDetail(miniWallkey, type).then(res => {
+					// console.log(res)
+					this.categoryRight[this.currentIndex].categoryDetail[type] = res
+					this.categoryRight = {...this.categoryRight}
+				})
+			},
+			
+			itemClick(index) {
+				this.getSubcategory(index)
+			},
+			
 			tabClick(index) {
 				switch(index) {
-					case 0:
+					case 0: 
 						this.currentType = 'pop';
 						break;
 					case 1:
 						this.currentType = 'new';
 						break;
-					case 2: 
+					case 2:
 						this.currentType = 'sell';
-						break;
+						break;		
 				}
-				this.getCategoryDetail(this.miniWallkey, this.currentType)
 			}
+			
 		}
+
 	}
 </script>
 
@@ -126,7 +135,7 @@
 	#category {
 		height: 100vh;
 	}
-	
+
 	.goods-content {
 		position: fixed;
 		right: 0;
@@ -134,5 +143,4 @@
 		top: 44px;
 		bottom: 49px;
 	}
-	
 </style>
