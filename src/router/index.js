@@ -39,7 +39,6 @@ const routes = [
 const router = new VueRouter({
   routes,
   mode: 'history'
-	
 })
 
 //以下代码解决路由地址重复点击的报错问题
