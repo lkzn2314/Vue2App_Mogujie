@@ -135,11 +135,10 @@
 	#category {
 		height: 100vh;
 	}
-
 	.goods-content {
 		position: fixed;
 		right: 0;
-		width: 70%;
+		width: calc(100% - 100px);
 		top: 44px;
 		bottom: 49px;
 	}
