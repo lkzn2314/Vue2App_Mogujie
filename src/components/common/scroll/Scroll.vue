@@ -19,7 +19,13 @@
       pullUpLoad: {
         type: Boolean,
         default: false
-      }
+      },
+			data: {
+				type: Array,
+				default() {
+					return []
+				}
+			}
     },
     
     data() {
@@ -55,7 +61,12 @@
       this.scroll.on('pullingUp', () => {
         this.$emit('pullingUp')
       })
-    }
+    },
+		watch: {
+			data() {
+				setTimeout(this.refresh, 20)
+			}
+		}
   }
 </script>
 

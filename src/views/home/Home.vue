@@ -6,11 +6,12 @@
     
     <tab-control :titles="['流行', '新款', '精选']"
     @tabClick="tabClick" ref="tabControl1"
-     class="tabControl" v-show="isTabFixed"/>
+    class="tabControl" v-show="isTabFixed"/>
     
     <scroll class="content" ref="scroll"
      :probe-type="3" @scroll="scrollPosition"
-     :pull-up-load="true" @pullingUp="loadMore">
+     :pull-up-load="true" @pullingUp="loadMore"
+		 :data="goods[currentType].list">
       <home-swiper :banners="banners" 
       @swiperImgLoad="swiperImgLoad"/>
       <home-recommend :recommends="recommends"/>
